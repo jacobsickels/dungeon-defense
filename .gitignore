@@ -1,0 +1,18 @@
+# Godot 4+ generated files
+.godot/
+/android/
+
+# Export output (web builds, .exe, etc.)
+/build/
+
+# Translation files Godot generates from CSV
+*.translation
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / tool local settings
+.vscode/settings.json
+.claude/settings.local.json
