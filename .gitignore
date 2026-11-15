@@ -3,7 +3,6 @@
 /android/
 
 # Export output (web builds, .exe, etc.)
-/build/
 
 # Translation files Godot generates from CSV
 *.translation
