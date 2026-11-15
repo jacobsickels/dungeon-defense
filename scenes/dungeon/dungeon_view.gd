@@ -24,6 +24,8 @@ var _geometry_dirty: bool = true
 ## Re-center the camera with the next rebuild: only when the line grows, not on upgrades.
 var _recenter: bool = true
 var _models: Dictionary[int, AdventurerModel] = {}
+## Each room's interior, by room id, for hazard and pulse animations.
+var _interiors: Dictionary[int, RoomInterior] = {}
 
 
 func _ready() -> void:
@@ -35,6 +37,14 @@ func _ready() -> void:
 	_sim.adventurer_hit.connect(_on_adventurer_hit)
 	_sim.adventurer_hazard_hit.connect(_on_adventurer_hazard_hit)
 	_sim.adventurer_fell.connect(_on_adventurer_fell)
+	_sim.hazard_triggered.connect(func(room: DungeonRoom, index: int, _adv: Adventurer) -> void:
+		var interior: RoomInterior = _interiors.get(room.id)
+		if interior != null:
+			interior.trigger_hazard(index))
+	_sim.room_pulsed.connect(func(room: DungeonRoom, _targets: int) -> void:
+		var interior: RoomInterior = _interiors.get(room.id)
+		if interior != null:
+			interior.pulse())
 
 
 func _process(delta: float) -> void:
@@ -56,6 +66,7 @@ func _rebuild_geometry() -> void:
 		_geometry.queue_free()
 	_geometry = DungeonGeometry.build(_sim.dungeon)
 	add_child(_geometry)
+	_interiors = DungeonGeometry.interiors(_geometry)
 
 
 func _dungeon_center() -> Vector3:

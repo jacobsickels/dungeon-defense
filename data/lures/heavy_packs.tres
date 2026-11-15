@@ -6,11 +6,11 @@
 script = ExtResource("1_lure")
 id = &"heavy_packs"
 display_name = "Heavy Packs"
-description = "Adventurers come laden with gear for the haul home. They walk slower and spend longer in every room, so damage-over-time rooms bleed them more. (Hidden until such a room exists.)"
+description = "Adventurers come laden with gear for the haul home. They walk slower and spend longer in every room, so damage-over-time rooms bleed them more."
 base_cost = 50.0
 cost_growth = 3.0
 max_level = 5
 spawn_rate_mult = 1.0
 blood_mult = 1.0
 speed_mult = 0.85
-available = false
+available = true

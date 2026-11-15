@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/rooms/room_interior.gd" id="interior"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_wood_large.gltf" id="floor_wood_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/shelf_large.gltf" id="shelf_large"]
+[ext_resource type="Script" path="res://scenes/rooms/pieces/flying_books.gd" id="books"]
+
+[node name="HauntedLibrary" type="Node3D"]
+script = ExtResource("interior")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_wood_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Shelf1" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-4, 1.0, -5.5)
+
+[node name="Shelf2" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-4, 2.0, -5.5)
+
+[node name="Shelf3" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-4, 3.0, -5.5)
+
+[node name="Shelf4" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-1.5, 1.0, -5.5)
+
+[node name="Shelf5" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-1.5, 2.0, -5.5)
+
+[node name="Shelf6" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(-1.5, 3.0, -5.5)
+
+[node name="Shelf7" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(1.5, 1.0, -5.5)
+
+[node name="Shelf8" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(1.5, 2.0, -5.5)
+
+[node name="Shelf9" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(1.5, 3.0, -5.5)
+
+[node name="Shelf10" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(4, 1.0, -5.5)
+
+[node name="Shelf11" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(4, 2.0, -5.5)
+
+[node name="Shelf12" parent="Props" instance=ExtResource("shelf_large")]
+position = Vector3(4, 3.0, -5.5)
+
+[node name="Books" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+script = ExtResource("books")

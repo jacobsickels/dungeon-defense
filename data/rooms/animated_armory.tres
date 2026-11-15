@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/animated_armory.tscn" id="2_interior"]
+[ext_resource type="Resource" path="res://data/layouts/armory.tres" id="3_layout"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"animated_armory"
+display_name = "Animated Armory"
+description = "Swords hang in the air, waiting. Each level adds a blade that slashes as adventurers pass."
+base_cost = 130000.0
+buildable = true
+cost_growth = 1.15
+line_order = 50
+traverse_time = 3.0
+hazard_damage = 320.0
+hazard_layout = ExtResource("3_layout")
+interior = ExtResource("2_interior")

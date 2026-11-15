@@ -1,5 +1,6 @@
 extends GutTest
-## Hazards (spikes): where they stand, and adventurers taking one hit per hazard they pass.
+## Hazards (spikes, skeletons, ...): where they stand, and adventurers taking one hit per
+## hazard they pass.
 
 const F = preload("res://tests/fixtures/content_fixture.gd")
 
@@ -22,21 +23,32 @@ func _walk_one_through() -> Adventurer:
 	return adv
 
 
-func test_layout_is_stable_and_inside_the_room() -> void:
-	var spots := HazardLayout.spots()
-	assert_eq(spots.size(), (HazardLayout.EXTENT * 2 + 1) ** 2)
-	assert_eq(HazardLayout.spots(), spots, "same every call")
+func test_default_layout_is_stable_and_inside_the_room() -> void:
+	var layout := HazardLayout.default_layout()
+	var spots := layout.spots()
+	assert_eq(spots.size(), 11 * 11)
+	assert_eq(layout.spots(), spots, "same every call")
 	for spot: Vector2 in spots:
 		assert_lt(absf(spot.x), HazardLayout.HALF_ROOM)
 		assert_lt(absf(spot.y), HazardLayout.HALF_ROOM)
 	assert_lt(spots[0].length(), 0.5, "the first spike is in the middle of the room")
 
 
-func test_layout_fills_the_path_before_the_sides() -> void:
-	# The first few spikes are spread along the path (x), not across it (z).
-	var spots := HazardLayout.spots()
+func test_default_layout_fills_the_path_before_the_sides() -> void:
+	var spots := HazardLayout.default_layout().spots()
 	for i: int in 5:
 		assert_lt(absf(spots[i].y), 0.5, "spike %d should be on the path: %s" % [i, spots[i]])
+
+
+func test_layout_can_keep_the_walkway_clear() -> void:
+	var layout := HazardLayout.new()
+	layout.spacing = 2.0
+	layout.extent = Vector2i(2, 2)
+	layout.keep_path_clear = true
+	var spots := layout.spots()
+	assert_eq(spots.size(), 5 * 4, "5 columns, 4 rows with the middle row left out")
+	for spot: Vector2 in spots:
+		assert_gt(absf(spot.y), 1.0, "nothing on the walkway: %s" % spot)
 
 
 func test_one_hit_per_spike_per_level() -> void:
@@ -54,11 +66,22 @@ func test_one_hit_per_spike_per_level() -> void:
 		assert_eq(_sim.blood, F.SPIKE_HIT * level, "level %d" % level)
 
 
+func test_each_hazard_reports_which_one_hit() -> void:
+	_sim.buy_room(&"spikes")
+	_sim.buy_room(&"spikes")
+	_sim.buy_room(&"spikes")
+	var triggered: Array[int] = []
+	_sim.hazard_triggered.connect(func(_r: DungeonRoom, i: int, _a: Adventurer) -> void: triggered.append(i))
+	_walk_one_through()
+	triggered.sort()
+	assert_eq(triggered, [0, 1, 2] as Array[int], "every hazard went off once")
+
+
 func test_hit_lands_when_passing_the_spike_not_before() -> void:
 	_sim.buy_room(&"spikes")
 	_sim.blood = 0.0
 	var adv := _sim.spawn_adventurer(_sim.content.adventurers[&"peasant"])
-	var spike_at := HazardLayout.pass_progress(HazardLayout.spots()[0])
+	var spike_at := HazardLayout.pass_progress(HazardLayout.default_layout().spots()[0])
 	assert_almost_eq(spike_at, 0.5, 0.05, "the first spike is mid-room")
 	for i: int in 100:
 		if adv.room_id == _spikes().id and adv.progress >= spike_at - 0.11:
@@ -71,7 +94,11 @@ func test_hit_lands_when_passing_the_spike_not_before() -> void:
 	assert_eq(_sim.blood, F.SPIKE_HIT, "hit once on passing it")
 
 
-func test_spikes_beyond_capacity_add_nothing() -> void:
+func test_past_capacity_each_level_still_adds_damage() -> void:
 	_sim.buy_room(&"spikes")
-	_spikes().level = HazardLayout.capacity() + 10
-	assert_eq(_spikes().hazard_count(), HazardLayout.capacity())
+	var capacity := HazardLayout.default_layout().capacity()
+	_spikes().level = capacity * 2
+	assert_eq(_spikes().hazard_count(), capacity, "the room is full")
+	assert_eq(_spikes().hazard_hit_damage(), F.SPIKE_HIT * 2.0, "so each hit is doubled")
+	_walk_one_through()
+	assert_almost_eq(_sim.blood, F.SPIKE_HIT * capacity * 2.0, 1e-6, "level × damage per crossing")

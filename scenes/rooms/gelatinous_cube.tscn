@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/rooms/room_interior.gd" id="interior"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_dirt_large_rocky.gltf" id="floor_dirt_large_rocky"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_dirt_large.gltf" id="floor_dirt_large"]
+[ext_resource type="Script" path="res://scenes/rooms/pieces/gel_cube.gd" id="cube"]
+
+[node name="GelatinousCube" type="Node3D"]
+script = ExtResource("interior")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(4, 0, 4)
+
+[node name="Cube" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+script = ExtResource("cube")

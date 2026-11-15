@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/rooms/room_interior.gd" id="interior"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_tile_large.gltf" id="floor_tile_large"]
+[ext_resource type="Script" path="res://scenes/rooms/level_spawner.gd" id="spawner"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/pieces/glyph_rune.tscn" id="glyph_rune"]
+
+[node name="GlyphHall" type="Node3D"]
+script = ExtResource("interior")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Hazards" type="Node3D" parent="."]
+script = ExtResource("spawner")
+piece = ExtResource("glyph_rune")
+face_path = false
+height = 0.0

@@ -14,6 +14,14 @@ const SPIKES_ORDER: int = 10
 const BLADES_DPS: float = 20.0
 const BLADES_COST: float = 100.0
 const BLADES_ORDER: int = 20
+## Poison picked up on entering, per level.
+const FEAST_POISON: float = 40.0
+## Pulse damage per level, every PULSE_INTERVAL seconds.
+const ROCK_PULSE: float = 7.0
+const PULSE_INTERVAL: float = 0.5
+## Global rooms: +50% blood per level, and +2 damage per hit per level.
+const GEM_BONUS: float = 0.5
+const ALTAR_HIT: float = 2.0
 ## "ads": spawn ×2 per level. "plump": blood ×3 per level. "heavy": speed ×0.5 per level.
 ## Costs double per level.
 const ADS_COST: float = 10.0
@@ -35,6 +43,23 @@ static func make() -> ContentDB:
 	var blades := room(&"blades", BLADES_COST, BLADES_DPS, true)
 	blades.line_order = BLADES_ORDER
 	db.add_room(blades)
+	var feast := room(&"feast", 100.0, 0.0, true)
+	feast.poison_damage = FEAST_POISON
+	feast.line_order = 30
+	db.add_room(feast)
+	var rock := room(&"rock", 100.0, 0.0, true)
+	rock.pulse_damage = ROCK_PULSE
+	rock.pulse_interval = PULSE_INTERVAL
+	rock.line_order = 40
+	db.add_room(rock)
+	var gem := room(&"gem", 100.0, 0.0, true)
+	gem.global_blood_bonus = GEM_BONUS
+	gem.line_order = 50
+	db.add_room(gem)
+	var altar := room(&"altar", 100.0, 0.0, true)
+	altar.global_hit_damage = ALTAR_HIT
+	altar.line_order = 60
+	db.add_room(altar)
 	var peasant := AdventurerDef.new()
 	peasant.id = &"peasant"
 	peasant.speed = 1.0

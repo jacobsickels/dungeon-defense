@@ -12,3 +12,4 @@ cost_growth = 3.5
 spawn_rate_mult = 1.0
 blood_mult = 1.4
 speed_mult = 1.0
+max_level = 10

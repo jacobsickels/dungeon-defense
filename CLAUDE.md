@@ -58,7 +58,7 @@ data (Resources)  ->  simulation (pure logic, ticks)  ->  signals  ->  presentat
 | `Adventurer`  | Runtime state of one adventurer.                                 |
 | `ContentDB`   | Indexes `RoomDef` / `AdventurerDef` / `LureDef` by id and loads them from `res://data/`. |
 | Lures (in `Simulation`) | `lures_owned` per id, `buy_lure`, `lure_multiplier(&"blood_mult")`. Multipliers are applied when an adventurer spawns. |
-| `HazardLayout`| Where a room's hazards (spikes) stand, in order: spot i for the i-th hazard. The sim hits adventurers as they pass each spot (`pass_progress`). `LevelScatter` draws them at the same spots. Change it in one place only. |
+| `HazardLayout`| A Resource: where a room's hazards stand, in order (spot i for the i-th hazard). `RoomDef.hazard_layout`, or `default_layout()` (spike spacing). The sim hits adventurers as they pass each spot (`hazards_passed`), and the view draws pieces at the same spots. Layouts live in `data/layouts/`. |
 | `Balance`     | Global tuning constants.                                         |
 | `NumberFormat`| All number display.                                              |
 
@@ -89,6 +89,21 @@ Cross-system events are signals on `Simulation`. Add an `Events` bus only if tha
   Adventurers walk entry edge → room center → exit edge, interpolated between ticks.
 - Write pathing so it doesn't *assume* a tree. Loops are a planned feature, so a
   BFS or `AStar2D` over the room graph is the safe default.
+
+### Room effects (`RoomDef`, all per level)
+
+- `hazard_damage` + `hazard_layout`: one hazard per level, each hitting once as an adventurer
+  passes its spot. Past the layout's capacity, each hit gets stronger (`hazard_hit_damage`),
+  so a level is always worth `hazard_damage`. Emits `adventurer_hazard_hit` and, per hazard,
+  `hazard_triggered(room, index, adv)` so the view animates that exact piece.
+- `dps`: damage over time while inside (slower walkers bleed more).
+- `poison_damage`: added on entering, dealt over `Balance.POISON_DURATION` wherever they are,
+  and anything left lands in `_fall`.
+- `pulse_damage` / `pulse_interval`: per-room timer, which hits everyone inside. Emits `room_pulsed`.
+- `global_blood_bonus` (× all blood) and `global_hit_damage` (+damage on every discrete hit,
+  meaning hazards, pulses and clicks, but not DoT or poison). Recomputed on purchase.
+- **Rule: no effect may depend on where a room sits in the line.** The user explicitly
+  doesn't want order to matter.
 
 ### Data-driven content
 
@@ -126,13 +141,24 @@ Saves store **ids and numbers only**, never resource paths or object references.
 - **Room interiors** are scenes in `res://scenes/rooms/<id>.tscn` (floor + props, centered,
   12×12), linked from `RoomDef.interior`. The path runs west edge → center → east edge, so put
   traps on that line and keep props in the corners.
-- **Rooms show their level**: give an interior's root the `RoomInterior` script, and tag
-  pieces with `metadata/min_level` (shown from that level) and/or `metadata/max_level`
-  (shown up to that level). `DungeonGeometry` calls `set_level`, and the view rebuilds on
-  `room_upgraded`. Any child with its own `set_level` gets the level too. **`LevelScatter`**
-  (a MultiMeshInstance3D) draws one copy of a mesh per level at `HazardLayout`'s spots, which are
-  where the simulation deals hazard damage. The Spike Corridor uses it: one spike at level 1, one
-  more per level, and each spike hits an adventurer once as they walk past (`RoomDef.hazard_damage`).
+- **Rooms show their level**: an interior's root has the `RoomInterior` script.
+  `DungeonGeometry` calls `setup(room)`, and the view rebuilds the geometry on `room_upgraded`.
+  `RoomInterior` passes things down to children:
+  - `metadata/min_level` / `metadata/max_level` on any node show or hide it by level.
+  - `set_room(room)` on children: **`LevelScatter`** (MultiMesh, static hazards such as spikes)
+    and **`LevelSpawner`** (one `piece` scene per hazard, for animated hazards), both at the
+    room's `HazardLayout` spots, plus custom pieces (`gel_cube`, `flying_books`, `boulder_roller`,
+    `floating_gem`).
+  - `trigger_hazard(index)`: the piece at that index animates (a skeleton swings, a mimic bites).
+  - `pulse()`: the boulder rolls.
+- **Room content is generated**: `tools/generate_rooms.py` writes the D&D room interiors
+  (`scenes/rooms/*.tscn`), piece scenes (`scenes/rooms/pieces/*.tscn`), hazard layouts
+  (`data/layouts/`), and room data (`data/rooms/*.tres`, except Entrance, Spike Corridor, and Treasure).
+  Edit the script and run `python tools/generate_rooms.py`, rather than editing its outputs.
+  Piece behavior lives in hand-written `scenes/rooms/pieces/*.gd`.
+- Other art in use: KayKit props (`props/`: spellbooks, sword), Forest Nature rocks (`forest/`),
+  and Kenney's Particle Pack textures (`assets/third_party/kenney_particles/`, CC0), copied from
+  heavens-mandate.
 - **Derived assets**: single pieces cut out of KayKit models live in `res://assets/derived/`,
   made by scripts in `res://tools/` (run with `-s tools/<script>.gd`). Example:
   `tools/bake_single_spike.gd` cuts one spike out of `floor_tile_big_spikes` (9 spikes in one mesh)
@@ -174,7 +200,7 @@ res://
     characters/  # AdventurerModel, CharacterAnimations
   ui/          # HUD, shop panels, tooltips, number formatting widgets
   assets/      # art, audio, fonts. Third-party packs in assets/third_party/<pack>/, pieces cut from them in assets/derived/
-  tools/       # one-off -s scripts that generate assets (e.g. bake_single_spike.gd)
+  tools/       # asset/content generators: bake_single_spike.gd (-s), generate_rooms.py (python)
   tests/       # headless tests for core/
   docs/        # design docs. Has a .gdignore so Godot doesn't import it
 ```

@@ -1,0 +1,123 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/rooms/room_interior.gd" id="interior"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_tile_large.gltf" id="floor_tile_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_foundation_allsides.gltf" id="floor_foundation_allsides"]
+[ext_resource type="Script" path="res://scenes/rooms/pieces/floating_gem.gd" id="gem"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/bottle_A_brown.gltf" id="bottle_A_brown"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/candle_thin_lit.gltf" id="candle_thin_lit"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/bottle_B_brown.gltf" id="bottle_B_brown"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/candle_lit.gltf" id="candle_lit"]
+
+[node name="BloodAltar" type="Node3D"]
+script = ExtResource("interior")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Pedestal" parent="Props" instance=ExtResource("floor_foundation_allsides")]
+position = Vector3(0, 0, 3.4)
+scale = Vector3(0.9, 0.9, 0.9)
+
+[node name="Gem" type="Node3D" parent="."]
+position = Vector3(0, 2.9, 3.4)
+script = ExtResource("gem")
+color = Color(0.95, 0.12, 0.12, 1)
+
+[node name="Offering1" parent="Props" instance=ExtResource("bottle_A_brown")]
+position = Vector3(0.22, 0, 1.51)
+rotation = Vector3(0, 0.7, 0)
+metadata/min_level = 1
+
+[node name="Offering2" parent="Props" instance=ExtResource("candle_thin_lit")]
+position = Vector3(-0.22, 0, 1.51)
+rotation = Vector3(0, 1.4, 0)
+metadata/min_level = 2
+
+[node name="Offering3" parent="Props" instance=ExtResource("bottle_B_brown")]
+position = Vector3(0.65, 0, 1.57)
+rotation = Vector3(0, 2.1, 0)
+metadata/min_level = 3
+
+[node name="Offering4" parent="Props" instance=ExtResource("candle_lit")]
+position = Vector3(-0.65, 0, 1.57)
+rotation = Vector3(0, 2.8, 0)
+metadata/min_level = 4
+
+[node name="Offering5" parent="Props" instance=ExtResource("bottle_A_brown")]
+position = Vector3(1.06, 0, 1.7)
+rotation = Vector3(0, 3.5, 0)
+metadata/min_level = 5
+
+[node name="Offering6" parent="Props" instance=ExtResource("candle_thin_lit")]
+position = Vector3(-1.06, 0, 1.7)
+rotation = Vector3(0, 4.2, 0)
+metadata/min_level = 6
+
+[node name="Offering7" parent="Props" instance=ExtResource("bottle_B_brown")]
+position = Vector3(1.44, 0, 1.88)
+rotation = Vector3(0, 4.9, 0)
+metadata/min_level = 7
+
+[node name="Offering8" parent="Props" instance=ExtResource("candle_lit")]
+position = Vector3(-1.44, 0, 1.88)
+rotation = Vector3(0, 5.6, 0)
+metadata/min_level = 8
+
+[node name="Offering9" parent="Props" instance=ExtResource("bottle_A_brown")]
+position = Vector3(1.77, 0, 2.11)
+rotation = Vector3(0, 6.3, 0)
+metadata/min_level = 9
+
+[node name="Offering10" parent="Props" instance=ExtResource("candle_thin_lit")]
+position = Vector3(-1.77, 0, 2.11)
+rotation = Vector3(0, 7.0, 0)
+metadata/min_level = 10
+
+[node name="Offering11" parent="Props" instance=ExtResource("bottle_B_brown")]
+position = Vector3(2.03, 0, 2.39)
+rotation = Vector3(0, 7.7, 0)
+metadata/min_level = 11
+
+[node name="Offering12" parent="Props" instance=ExtResource("candle_lit")]
+position = Vector3(-2.03, 0, 2.39)
+rotation = Vector3(0, 8.4, 0)
+metadata/min_level = 12
+
+[node name="Offering13" parent="Props" instance=ExtResource("bottle_A_brown")]
+position = Vector3(2.23, 0, 2.7)
+rotation = Vector3(0, 9.1, 0)
+metadata/min_level = 13
+
+[node name="Offering14" parent="Props" instance=ExtResource("candle_thin_lit")]
+position = Vector3(-2.23, 0, 2.7)
+rotation = Vector3(0, 9.8, 0)
+metadata/min_level = 14

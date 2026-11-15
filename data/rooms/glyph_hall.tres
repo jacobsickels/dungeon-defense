@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/glyph_hall.tscn" id="2_interior"]
+[ext_resource type="Resource" path="res://data/layouts/glyph.tres" id="3_layout"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"glyph_hall"
+display_name = "Glyph Hall"
+description = "Glyphs of warding cover the floor. Each level etches another, and each one bursts as an adventurer steps past."
+base_cost = 20000000.0
+buildable = true
+cost_growth = 1.15
+line_order = 70
+traverse_time = 3.0
+hazard_damage = 5500.0
+hazard_layout = ExtResource("3_layout")
+interior = ExtResource("2_interior")

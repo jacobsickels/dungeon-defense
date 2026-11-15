@@ -2,8 +2,14 @@ class_name Hud
 extends CanvasLayer
 ## Blood, income, stats, and the shop: rooms (build once, then upgrade) and lures.
 
+## Unbuilt rooms shown in the shop at once, in line order, like Cookie Clicker revealing
+## buildings ahead of you.
+const ROOMS_REVEALED_AHEAD: int = 2
+
+
 ## One shop entry: a name, its level, and a buy button.
 class ShopRow:
+	var box: HBoxContainer
 	var level: Label
 	var buy: Button
 
@@ -32,6 +38,7 @@ func _ready() -> void:
 func _make_row(parent: Container, title: String, tooltip: String, on_buy: Callable) -> ShopRow:
 	var row := ShopRow.new()
 	var box := HBoxContainer.new()
+	row.box = box
 	parent.add_child(box)
 
 	var name_label := Label.new()
@@ -73,9 +80,13 @@ func _process(_delta: float) -> void:
 	_income_label.text = "+%s blood/s" % _rate(sim.income_per_second)
 	_stats_label.text = "Visitors: %d    Inside: %d" % [sim.visitors, sim.adventurers.size()]
 
-	for id: StringName in _room_rows:
+	var unbuilt_shown := 0
+	for id: StringName in _room_rows:  # in line order
 		var row := _room_rows[id]
 		var level := sim.room_level(id)
+		if level == 0:
+			unbuilt_shown += 1
+		row.box.visible = level > 0 or unbuilt_shown <= ROOMS_REVEALED_AHEAD
 		var cost := sim.room_cost(id)
 		row.level.text = "Lv %d" % level if level > 0 else "—"
 		row.buy.text = ("Build %s" if level == 0 else "▲ %s") % NumberFormat.short(cost)

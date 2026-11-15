@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/gelatinous_cube.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"gelatinous_cube"
+display_name = "Gelatinous Cube"
+description = "A quivering cube slides back and forth, engulfing all who enter. Hurts the whole time an adventurer is inside, and grows each level."
+base_cost = 12000.0
+buildable = true
+cost_growth = 1.15
+line_order = 40
+traverse_time = 3.0
+dps = 30.0
+interior = ExtResource("2_interior")

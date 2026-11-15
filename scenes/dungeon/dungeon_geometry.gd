@@ -34,6 +34,15 @@ static func edge_center(coord: Vector2i, dir: Vector2i) -> Vector3:
 	return cell_center(coord) + Vector3(dir.x, 0.0, dir.y) * HALF
 
 
+## Every RoomInterior under a built geometry root, by room id.
+static func interiors(root: Node3D) -> Dictionary[int, RoomInterior]:
+	var out: Dictionary[int, RoomInterior] = {}
+	for child: Node in root.get_children():
+		if child is RoomInterior and (child as RoomInterior).room != null:
+			out[(child as RoomInterior).room.id] = child
+	return out
+
+
 static func build(dungeon: Dungeon) -> Node3D:
 	var root := Node3D.new()
 	root.name = "Geometry"
@@ -52,9 +61,9 @@ static func _add_interior(root: Node3D, room: DungeonRoom) -> void:
 	if room.def.interior != null:
 		var interior: Node3D = room.def.interior.instantiate()
 		interior.position = center
-		if interior is RoomInterior:
-			(interior as RoomInterior).set_level(room.level)
 		root.add_child(interior)
+		if interior is RoomInterior:
+			(interior as RoomInterior).setup(room)
 		return
 	for x: float in SEGMENT_OFFSETS:
 		for z: float in SEGMENT_OFFSETS:

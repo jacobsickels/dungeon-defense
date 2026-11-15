@@ -19,8 +19,13 @@ signal room_upgraded(room: DungeonRoom)
 signal adventurer_spawned(adv: Adventurer)
 ## Direct hits (clicks).
 signal adventurer_hit(adv: Adventurer, damage: float, blood: float)
-## Walked past one or more hazards (spikes, ...) this tick. Damage over time isn't signalled.
+## Took one or more discrete hits from a room this tick: hazards walked past, or a pulse.
+## Damage over time and poison aren't signalled.
 signal adventurer_hazard_hit(adv: Adventurer, hits: int, blood: float)
+## A specific hazard (by index in its room's layout) just hit someone, for its attack animation.
+signal hazard_triggered(room: DungeonRoom, index: int, adv: Adventurer)
+## A room with pulse damage just went off, hitting `targets` adventurers.
+signal room_pulsed(room: DungeonRoom, targets: int)
 ## Reached the treasure and dropped through the trapdoor.
 signal adventurer_fell(adv: Adventurer)
 signal lures_changed
@@ -52,12 +57,15 @@ var _spawn_timer: float = Balance.SPAWN_INTERVAL - Balance.FIRST_SPAWN_DELAY
 var _next_adventurer_id: int = 0
 ## Blood earned during the current tick, folded into income_per_second.
 var _tick_income: float = 0.0
-var _pass_points_cache: Dictionary[int, PackedFloat64Array] = {}
+## Dungeon-wide bonuses from rooms like the Phylactery and the Blood Altar. Recomputed on purchase.
+var _global_blood_mult: float = 1.0
+var _global_hit_bonus: float = 0.0
 
 
 func _init(p_content: ContentDB) -> void:
 	content = p_content
 	_build_starting_layout()
+	_recompute_globals()
 
 
 func _build_starting_layout() -> void:
@@ -77,6 +85,7 @@ func tick(dt: float) -> void:
 				spawn_adventurer(content.adventurers[DEFAULT_ADVENTURER])
 	for adv: Adventurer in adventurers.values():
 		_tick_adventurer(adv, dt)
+	_tick_pulses(dt)
 	# Exponential moving average of income.
 	var blend := clampf(dt / Balance.INCOME_SMOOTHING_TIME, 0.0, 1.0)
 	income_per_second = lerpf(income_per_second, _tick_income / dt, blend)
@@ -88,12 +97,21 @@ func _tick_adventurer(adv: Adventurer, dt: float) -> void:
 	var damage := room.dps() * dt
 	if damage > 0.0:
 		_bleed(adv, damage)
+	if adv.poison_remaining > 0.0:
+		var poison := minf(adv.poison_rate * dt, adv.poison_remaining)
+		adv.poison_remaining -= poison
+		_bleed(adv, poison)
 	var before := adv.progress
 	adv.progress += dt * adv.speed / room.def.traverse_time
-	var hits: int = _hazards_passed(room, before, adv.progress)
-	if hits > 0:
-		var gained := _bleed(adv, room.def.hazard_damage * hits)
-		adventurer_hazard_hit.emit(adv, hits, gained)
+	var count := room.hazard_count()
+	if count > 0:
+		var passed: PackedInt32Array = room.def.layout().hazards_passed(count, before, adv.progress)
+		if not passed.is_empty():
+			var per_hit := room.hazard_hit_damage() + _global_hit_bonus
+			var gained := _bleed(adv, per_hit * passed.size())
+			adventurer_hazard_hit.emit(adv, passed.size(), gained)
+			for index: int in passed:
+				hazard_triggered.emit(room, index, adv)
 	if room.def.is_treasure and adv.progress >= FALL_PROGRESS:
 		_fall(adv)
 	elif adv.progress >= 1.0:
@@ -109,29 +127,39 @@ func _advance(adv: Adventurer) -> void:
 	adv.prev_room_id = adv.room_id
 	adv.room_id = adv.next_room_id
 	adv.progress = 0.0
+	var room := dungeon.get_room(adv.room_id)
+	if room.poison_damage() > 0.0:
+		_add_poison(adv, room.poison_damage())
 	_update_next_room(adv)
 
 
-## How many of the room's hazards lie between two points of progress through it (from, to].
-func _hazards_passed(room: DungeonRoom, from: float, to: float) -> int:
-	var count := room.hazard_count()
-	if count == 0:
-		return 0
-	var points := _hazard_pass_points(count)
-	return points.bsearch(to, false) - points.bsearch(from, false)
+## Poison stacks: what's left of earlier doses plus the new one, spread over a fresh duration.
+func _add_poison(adv: Adventurer, amount: float) -> void:
+	adv.poison_remaining += amount
+	adv.poison_rate = adv.poison_remaining / Balance.POISON_DURATION
 
 
-## Sorted progress points where the first `count` hazards are passed. The layout is the same
-## for every room, so this is cached by count.
-func _hazard_pass_points(count: int) -> PackedFloat64Array:
-	if not _pass_points_cache.has(count):
-		var points := PackedFloat64Array()
-		var spots: Array[Vector2] = HazardLayout.spots()
-		for i: int in count:
-			points.append(HazardLayout.pass_progress(spots[i]))
-		points.sort()
-		_pass_points_cache[count] = points
-	return _pass_points_cache[count]
+## Rooms with pulses (the boulder) go off every pulse_interval, hitting everyone inside.
+func _tick_pulses(dt: float) -> void:
+	for room: DungeonRoom in dungeon.rooms.values():
+		if room.def.pulse_damage <= 0.0:
+			continue
+		room.pulse_timer += dt
+		while room.pulse_timer >= room.def.pulse_interval:
+			room.pulse_timer -= room.def.pulse_interval
+			_pulse(room)
+
+
+func _pulse(room: DungeonRoom) -> void:
+	var targets := 0
+	var per_hit := room.pulse_damage() + _global_hit_bonus
+	for adv: Adventurer in adventurers.values():
+		if adv.room_id != room.id:
+			continue
+		targets += 1
+		var gained := _bleed(adv, per_hit)
+		adventurer_hazard_hit.emit(adv, 1, gained)
+	room_pulsed.emit(room, targets)
 
 
 func _update_next_room(adv: Adventurer) -> void:
@@ -164,20 +192,27 @@ func hit_adventurer(adv_id: int, damage: float = Balance.CLICK_DAMAGE) -> bool:
 	var adv: Adventurer = adventurers.get(adv_id)
 	if adv == null:
 		return false
-	var gained := _bleed(adv, damage)
-	adventurer_hit.emit(adv, damage, gained)
+	var total := damage + _global_hit_bonus
+	var gained := _bleed(adv, total)
+	adventurer_hit.emit(adv, total, gained)
 	return true
 
 
-## Damage turns into blood at the adventurer's bleed rate. Returns the blood gained.
+## Damage turns into blood at the adventurer's bleed rate, times the dungeon-wide bonus.
+## Returns the blood gained.
 func _bleed(adv: Adventurer, damage: float) -> float:
-	var gained: float = damage * adv.bleed
+	var gained: float = damage * adv.bleed * _global_blood_mult
 	adv.blood_drained += gained
 	_add_blood(gained)
 	return gained
 
 
+## Into the pit. Any poison still working lands now, so where the poison room sits doesn't matter.
 func _fall(adv: Adventurer) -> void:
+	if adv.poison_remaining > 0.0:
+		var poison := adv.poison_remaining
+		adv.poison_remaining = 0.0
+		_bleed(adv, poison)
 	adventurers.erase(adv.id)
 	fallen += 1
 	adventurer_fell.emit(adv)
@@ -225,8 +260,27 @@ func buy_room(def_id: StringName) -> bool:
 	else:
 		room.level += 1
 		room_upgraded.emit(room)
+	_recompute_globals()
 	blood_changed.emit(blood)
 	return true
+
+
+## Multiplier on all blood from rooms with global_blood_bonus (1 = no bonus).
+func global_blood_multiplier() -> float:
+	return _global_blood_mult
+
+
+## Extra damage on every hit from rooms with global_hit_damage.
+func global_hit_bonus() -> float:
+	return _global_hit_bonus
+
+
+func _recompute_globals() -> void:
+	_global_blood_mult = 1.0
+	_global_hit_bonus = 0.0
+	for room: DungeonRoom in dungeon.rooms.values():
+		_global_blood_mult += room.def.global_blood_bonus * room.level
+		_global_hit_bonus += room.def.global_hit_damage * room.level
 
 
 ## Inserts the room before the first room on the line that should come after it.

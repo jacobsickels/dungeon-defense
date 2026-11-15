@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/skeleton_crypt.tscn" id="2_interior"]
+[ext_resource type="Resource" path="res://data/layouts/crypt.tres" id="3_layout"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"skeleton_crypt"
+display_name = "Skeleton Crypt"
+description = "Undead guardians line the hall. Each level raises another skeleton, and each one strikes as an adventurer passes."
+base_cost = 100.0
+buildable = true
+cost_growth = 1.15
+line_order = 20
+traverse_time = 3.0
+hazard_damage = 15.0
+hazard_layout = ExtResource("3_layout")
+interior = ExtResource("2_interior")

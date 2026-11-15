@@ -16,5 +16,8 @@ const SPAWN_INTERVAL: float = 4.0
 const FIRST_SPAWN_DELAY: float = 2.0
 const MAX_ADVENTURERS: int = 50
 
+## Seconds over which poison picked up in one room is dealt.
+const POISON_DURATION: float = 4.0
+
 ## Seconds over which the blood-per-second display is averaged.
 const INCOME_SMOOTHING_TIME: float = 20.0

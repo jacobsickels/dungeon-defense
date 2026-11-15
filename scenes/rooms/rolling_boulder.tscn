@@ -1,0 +1,65 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/rooms/room_interior.gd" id="interior"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_dirt_large.gltf" id="floor_dirt_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_dirt_large_rocky.gltf" id="floor_dirt_large_rocky"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/forest/Rock_1_B_Color1.gltf" id="Rock_1_B_Color1"]
+[ext_resource type="Script" path="res://scenes/rooms/pieces/boulder_roller.gd" id="roller"]
+
+[node name="RollingBoulder" type="Node3D"]
+script = ExtResource("interior")
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_dirt_large_rocky")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_dirt_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Rubble1" parent="Props" instance=ExtResource("Rock_1_B_Color1")]
+position = Vector3(-4.5, 0, -4.5)
+rotation = Vector3(0, 1.3, 0)
+scale = Vector3(2.5, 2.5, 2.5)
+
+[node name="Rubble2" parent="Props" instance=ExtResource("Rock_1_B_Color1")]
+position = Vector3(4.6, 0, -4.3)
+rotation = Vector3(0, 2.6, 0)
+scale = Vector3(2.0, 2.0, 2.0)
+
+[node name="Rubble3" parent="Props" instance=ExtResource("Rock_1_B_Color1")]
+position = Vector3(-4.4, 0, 4.5)
+rotation = Vector3(0, 3.9, 0)
+scale = Vector3(1.8, 1.8, 1.8)
+
+[node name="Rubble4" parent="Props" instance=ExtResource("Rock_1_B_Color1")]
+position = Vector3(4.5, 0, 4.4)
+rotation = Vector3(0, 5.2, 0)
+scale = Vector3(2.6, 2.6, 2.6)
+
+[node name="Roller" type="Node3D" parent="."]
+position = Vector3(0, 0, 0)
+script = ExtResource("roller")

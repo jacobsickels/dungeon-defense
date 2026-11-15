@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/blood_altar.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"blood_altar"
+display_name = "Blood Altar"
+description = "An altar that drinks from every wound. Each level adds 15K damage to every hit anywhere: traps, monsters, boulders, and clicks."
+base_cost = 1000000000000.0
+buildable = true
+cost_growth = 1.15
+line_order = 110
+traverse_time = 3.0
+global_hit_damage = 15000.0
+interior = ExtResource("2_interior")

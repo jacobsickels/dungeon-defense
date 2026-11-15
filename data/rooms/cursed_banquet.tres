@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/cursed_banquet.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"cursed_banquet"
+display_name = "Cursed Banquet"
+description = "A feast for weary travelers, every dish poisoned. The poison keeps working after they leave, and whatever is left lands when they fall. Adds a dish each level."
+base_cost = 330000000.0
+buildable = true
+cost_growth = 1.15
+line_order = 80
+traverse_time = 3.0
+poison_damage = 30000.0
+interior = ExtResource("2_interior")

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/mimic_treasury.tscn" id="2_interior"]
+[ext_resource type="Resource" path="res://data/layouts/mimic.tres" id="3_layout"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"mimic_treasury"
+display_name = "Mimic Treasury"
+description = "Chests line the walls, and every one is hungry. Each level adds a mimic that bites as adventurers pass."
+base_cost = 1100.0
+buildable = true
+cost_growth = 1.15
+line_order = 30
+traverse_time = 3.0
+hazard_damage = 24.0
+hazard_layout = ExtResource("3_layout")
+interior = ExtResource("2_interior")

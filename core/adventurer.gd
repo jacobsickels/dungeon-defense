@@ -17,6 +17,9 @@ var speed: float
 var bleed: float
 ## Total blood taken from them so far.
 var blood_drained: float = 0.0
+## Poison damage still to come, and how much of it lands per second.
+var poison_remaining: float = 0.0
+var poison_rate: float = 0.0
 var room_id: int = Dungeon.NO_ROOM
 var prev_room_id: int = Dungeon.NO_ROOM
 var next_room_id: int = Dungeon.NO_ROOM
