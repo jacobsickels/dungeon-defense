@@ -160,6 +160,24 @@ func test_new_room_behind_adventurer_fixes_prev_room() -> void:
 	assert_eq(adv.prev_room_id, _sim.room_of_type(&"spikes").id, "came-from is the adjacent room again")
 
 
+func test_debug_set_room_level_builds_and_sets_level_for_free() -> void:
+	_sim.debug_set_room_level(&"blades", 5)
+	_sim.debug_set_room_level(&"spikes", 3)
+	assert_eq(_line(), [&"entrance", &"spikes", &"blades", &"treasure"] as Array[StringName])
+	assert_eq(_sim.room_level(&"blades"), 5)
+	assert_eq(_sim.room_level(&"spikes"), 3)
+	assert_eq(_sim.blood, Balance.STARTING_BLOOD, "free")
+	_sim.debug_set_room_level(&"spikes", 1)
+	assert_eq(_sim.room_level(&"spikes"), 1, "can go back down")
+	_sim.debug_set_room_level(&"spikes", 0)
+	assert_eq(_sim.room_level(&"spikes"), 1, "0 is ignored")
+
+
+func test_debug_set_room_level_updates_global_bonuses() -> void:
+	_sim.debug_set_room_level(&"gem", 2)
+	assert_almost_eq(_sim.global_blood_multiplier(), 1.0 + F.GEM_BONUS * 2.0, 1e-9)
+
+
 func test_auto_spawn_respects_interval() -> void:
 	_sim.auto_spawn = true
 	var ticks := int(roundf(Balance.FIRST_SPAWN_DELAY / Balance.TICK_DT))

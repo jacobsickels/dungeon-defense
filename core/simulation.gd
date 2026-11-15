@@ -265,6 +265,23 @@ func buy_room(def_id: StringName) -> bool:
 	return true
 
 
+## Debug and sandbox only: builds the room type if needed and sets its level directly, free.
+## Level 0 is ignored (rooms can't be removed).
+func debug_set_room_level(def_id: StringName, level: int) -> void:
+	var def := _buildable_def(def_id)
+	if def == null or level < 1:
+		return
+	var room := room_of_type(def_id)
+	if room == null:
+		room = _place_in_line(def)
+		_reroute_adventurers()
+		room_built.emit(room)
+		dungeon_changed.emit()
+	room.level = level
+	_recompute_globals()
+	room_upgraded.emit(room)
+
+
 ## Multiplier on all blood from rooms with global_blood_bonus (1 = no bonus).
 func global_blood_multiplier() -> float:
 	return _global_blood_mult

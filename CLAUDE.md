@@ -237,6 +237,10 @@ Keep a scene and its script side by side (`room_view.tscn` + `room_view.gd`).
   Add `-gselect=<file_name_part>` to run one script, or `-gunit_test_name=<name>` for one test.
   If newly added `class_name`s aren't found, run once with `--import` first.
 - The user can also run tests from the GUT panel at the bottom of the editor.
+- **Sandbox** (`scenes/debug/sandbox.tscn`, run with F6): the real game with every room unlocked
+  at level 6, infinite blood, and a debug panel (set all room levels, spawn adventurers, game
+  speed, max lures, jump the camera to a room). It uses `Simulation.debug_set_room_level`. Add
+  new debug controls there, not in the normal game.
 - Other headless runs:
   `"E:/Godot/Godot_v4.7.2-stable_win64_console.exe" --headless --path . <args>`
 - Add or update tests together with any `core/` change. All tests must pass before

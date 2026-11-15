@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/debug/sandbox.gd" id="1_sandbox"]
+[ext_resource type="PackedScene" path="res://scenes/main/main.tscn" id="2_main"]
+
+[node name="Sandbox" type="Node"]
+script = ExtResource("1_sandbox")
+
+[node name="Main" parent="." instance=ExtResource("2_main")]
