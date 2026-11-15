@@ -19,8 +19,10 @@ currency, which buys more rooms and upgrades. Adventurers can't die or steal, so
   from omni lights, and a modest number of lights.
 - Window stretch: `canvas_items` / `expand` (already set in `project.godot`).
 - Godot executable: `E:\Godot\Godot_v4.7.2-stable_win64.exe`. Use the `_console.exe`
-  next to it for CLI/headless runs, since it prints to stdout. Export templates for 4.7.2
-  are installed.
+  next to it for CLI/headless runs, since it prints to stdout. Export templates for 4.7.2:
+  only **Windows** is installed (in %APPDATA%/Godot/export_templates/4.7.2.stable/). Web
+  needs `web_nothreads_release.zip` / `web_nothreads_debug.zip` there. The Web preset is in
+  `export_presets.cfg` (single-threaded, export path `build/web/index.html`).
 - Edit `project.godot` through the editor where possible. Autoloads and input actions
   may be added by hand, but keep the file's formatting intact.
 - `.godot/` is generated. Never edit or commit it.
