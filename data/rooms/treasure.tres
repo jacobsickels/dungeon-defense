@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/treasure.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"treasure"
+display_name = "Treasure Pit"
+description = "A pile of gold beside a trapdoor. Adventurers reach for it and drop into the dark."
+base_cost = 0.0
+buildable = false
+dps = 0.0
+traverse_time = 2.0
+is_entrance = false
+is_treasure = true
+color = Color(0.75, 0.6, 0.2, 1)
+interior = ExtResource("2_interior")

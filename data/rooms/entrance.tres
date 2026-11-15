@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/entrance.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"entrance"
+display_name = "Entrance"
+description = "Where adventurers come in, and where they try to get out."
+base_cost = 0.0
+buildable = false
+dps = 0.0
+traverse_time = 2.0
+is_entrance = true
+is_treasure = false
+color = Color(0.32, 0.36, 0.45, 1)
+interior = ExtResource("2_interior")

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="RoomDef" format=3]
+
+[ext_resource type="Script" path="res://core/defs/room_def.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://scenes/rooms/spike_corridor.tscn" id="2_interior"]
+
+[resource]
+script = ExtResource("1_room")
+id = &"spike_corridor"
+display_name = "Spike Corridor"
+description = "A single spike in the floor. Each level adds another spike, and every spike an adventurer walks past deals 3 damage."
+base_cost = 15.0
+buildable = true
+cost_growth = 1.15
+line_order = 10
+dps = 0.0
+hazard_damage = 3.0
+traverse_time = 3.0
+is_entrance = false
+is_treasure = false
+color = Color(0.62, 0.3, 0.28, 1)
+interior = ExtResource("2_interior")

@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_tile_large.gltf" id="floor_tile_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/barrel_large.gltf" id="barrel_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/box_stacked.gltf" id="box_stacked"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/barrel_small.gltf" id="barrel_small"]
+
+[node name="Entrance" type="Node3D"]
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Floor5" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Prop1" parent="Props" instance=ExtResource("barrel_large")]
+position = Vector3(4.3, 0, -4.3)
+rotation = Vector3(0, 0.4, 0)
+
+[node name="Prop2" parent="Props" instance=ExtResource("box_stacked")]
+position = Vector3(-4.2, 0, 4.2)
+rotation = Vector3(0, 0, 0)
+
+[node name="Prop3" parent="Props" instance=ExtResource("barrel_small")]
+position = Vector3(3, 0, -4.6)
+rotation = Vector3(0, 0, 0)

@@ -1,0 +1,77 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 296.0
+offset_bottom = 56.0
+custom_minimum_size = Vector2(280, 0)
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BloodLabel" type="Label" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.22, 0.22, 1)
+theme_override_font_sizes/font_size = 28
+text = "Blood: 0"
+
+[node name="StatsLabel" type="Label" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Kills: 0"
+
+[node name="IncomeLabel" type="Label" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Blood per second over the last ~20 seconds: every point of damage your rooms and clicks deal bleeds blood into the dungeon. Spending isn't counted."
+mouse_filter = 1
+theme_override_colors/font_color = Color(0.55, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "+0/s"
+
+[node name="Separator" type="HSeparator" parent="Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="ShopTitle" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+text = "Rooms"
+
+[node name="ShopList" type="VBoxContainer" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LureSeparator" type="HSeparator" parent="Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="LureTitle" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+tooltip_text = "Lures bring more adventurers, or ones who bleed more or linger longer. Each level multiplies blood/s."
+mouse_filter = 1
+text = "Lures"
+
+[node name="LureList" type="VBoxContainer" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HintLabel" type="Label" parent="Panel/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "Click adventurers to bleed them."

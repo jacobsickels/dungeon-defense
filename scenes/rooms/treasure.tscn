@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_tile_large.gltf" id="floor_tile_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/floor_tile_big_grate_open.gltf" id="trapdoor"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/chest_gold.gltf" id="chest_gold"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/coin_stack_large.gltf" id="coin_stack_large"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/coin_stack_medium.gltf" id="coin_stack_medium"]
+[ext_resource type="PackedScene" path="res://assets/third_party/kaykit/dungeon/coin_stack_small.gltf" id="coin_stack_small"]
+
+[node name="Treasure" type="Node3D"]
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="Props" type="Node3D" parent="."]
+
+[node name="Floor1" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, -4)
+
+[node name="Floor2" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 0)
+
+[node name="Floor3" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(-4, 0, 4)
+
+[node name="Floor4" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, -4)
+
+[node name="Trapdoor" parent="Floor" instance=ExtResource("trapdoor")]
+position = Vector3(0, 0, 0)
+
+[node name="Floor6" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(0, 0, 4)
+
+[node name="Floor7" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, -4)
+
+[node name="Floor8" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 0)
+
+[node name="Floor9" parent="Floor" instance=ExtResource("floor_tile_large")]
+position = Vector3(4, 0, 4)
+
+[node name="Prop1" parent="Props" instance=ExtResource("chest_gold")]
+position = Vector3(-4.2, 0, -4.2)
+rotation = Vector3(0, 0.785, 0)
+
+[node name="Prop2" parent="Props" instance=ExtResource("coin_stack_large")]
+position = Vector3(4.2, 0, -4.4)
+rotation = Vector3(0, 0, 0)
+
+[node name="Prop3" parent="Props" instance=ExtResource("coin_stack_medium")]
+position = Vector3(-4.4, 0, 4.2)
+rotation = Vector3(0, 0.5, 0)
+
+[node name="Prop4" parent="Props" instance=ExtResource("coin_stack_small")]
+position = Vector3(-2.6, 0, -4.6)
+rotation = Vector3(0, 0, 0)
+
+[node name="Prop5" parent="Props" instance=ExtResource("coin_stack_small")]
+position = Vector3(4.6, 0, 4.4)
+rotation = Vector3(0, 1.2, 0)
